@@ -19,8 +19,8 @@ public class ControllerMt {
       @RequestParam(name = "time") Long time,
       @RequestParam(name = "flag", required = false, defaultValue = "false") Boolean flag) {
 
-      int idTick = tickManagerService.processingTick(price, time, flag);
-      if(idTick > 0){
+      int result = tickManagerService.processingTick(price, time, flag);
+      if(result > 0){
         return ResponseEntity.ok().build();
       } else {
         return ResponseEntity.status(500).build();
