@@ -34,13 +34,13 @@ public class Tick {
   private double price;
 
   /**
-   * время тика
+   * время тика в мс
    */
   @Column(name = "TIMESTAMP")
   private long timestamp;
 
   /**
-   * направление тика относительно предыдущего
+   * направление тика относительно предыдущего 1 - в лонг / 0 - в шорт
    */
   @Column(name = "TREND")
   private int trend;

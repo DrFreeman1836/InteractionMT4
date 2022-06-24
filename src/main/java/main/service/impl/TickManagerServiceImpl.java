@@ -1,6 +1,7 @@
 package main.service.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import main.model.Tick;
@@ -14,24 +15,38 @@ public class TickManagerServiceImpl implements ManagerTicks {
 
   private final TickRepository tickRepository;
 
-  private List<Tick> Ticks = new ArrayList<>();
+  private List<Tick> ticks = new ArrayList<>();
 
-  private int priceLastTick;
+  private Double priceLastTick;
 
-  public int processingTick(Double price, Long time, Boolean flag){
+  public void processingTick(Double price, Long time, Boolean flag) throws Exception{
 
-    //
-    /*
-    ToDo реализовать логику сохранения тиков
-     */
+    ticks.add(Tick.builder()
+            .price(price)
+            .timestamp(time)
+            .trend(getTrendTick(price))
+            .flagFrog(flag)
+            .build());
+    priceLastTick = price;
 
-    return 0;
+    if(ticks.size() > 10){
+      addAllTick(ticks);
+      ticks.clear();
+    }
+
+  }
+
+  public List<Tick> getSortedListTicks(){
+    return ticks.stream().sorted(Comparator.comparingLong(Tick::getTimestamp)).toList();
+  }
+
+  public int getTrendTick(Double price){
+    return price > priceLastTick ? 1 : 0;
   }
 
   @Override
   public int addTick(Tick tick) {
-
-    return 0;
+    return tickRepository.save(tick).getId();
   }
 
   @Override
@@ -41,7 +56,7 @@ public class TickManagerServiceImpl implements ManagerTicks {
 
   @Override
   public Tick getLastTick() {
-    return null;
+    return tickRepository.findAll().stream().max(Comparator.comparingLong(Tick::getTimestamp)).get();
   }
 
 
