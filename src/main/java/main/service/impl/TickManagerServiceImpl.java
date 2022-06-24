@@ -1,25 +1,26 @@
 package main.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import main.model.Tick;
 import main.repository.TickRepository;
 import main.service.ManagerTicks;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TickManagerServiceImpl implements ManagerTicks {
 
   private final TickRepository tickRepository;
 
   private List<Tick> ticks = new ArrayList<>();
 
-  private Double priceLastTick;
+  private BigDecimal priceLastTick = new BigDecimal(0);
 
-  public void processingTick(Double price, Long time, Boolean flag) throws Exception{
+  public void processingTick(BigDecimal price, Long time, Boolean flag) throws Exception{
 
     ticks.add(Tick.builder()
             .price(price)
@@ -30,7 +31,7 @@ public class TickManagerServiceImpl implements ManagerTicks {
     priceLastTick = price;
 
     if(ticks.size() > 10){
-      addAllTick(ticks);
+      addAllTick(getSortedListTicks());
       ticks.clear();
     }
 
@@ -40,8 +41,8 @@ public class TickManagerServiceImpl implements ManagerTicks {
     return ticks.stream().sorted(Comparator.comparingLong(Tick::getTimestamp)).toList();
   }
 
-  public int getTrendTick(Double price){
-    return price > priceLastTick ? 1 : 0;
+  public int getTrendTick(BigDecimal price){
+    return price.compareTo(priceLastTick) > 0 ? 1 : 0;
   }
 
   @Override

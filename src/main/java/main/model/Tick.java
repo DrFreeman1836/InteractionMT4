@@ -1,5 +1,6 @@
 package main.model;
 
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,8 +31,8 @@ public class Tick {
   /**
    * цена тика
    */
-  @Column(name = "PRICE")
-  private double price;
+  @Column(columnDefinition = "decimal(5,5)", name = "PRICE")
+  private BigDecimal price;
 
   /**
    * время тика в мс

@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import main.Application;
 import main.service.impl.TickManagerServiceImpl;
 import org.aspectj.lang.annotation.Before;
@@ -13,7 +14,14 @@ public class TestTickManagerServiceImpl {
 
     @Before("")
     public void setUp() throws Exception{
-        tickManagerService.processingTick(0.9523, 100L, false);
+        tickManagerService.processingTick(new BigDecimal("0.9567"), 100L, false);
+        tickManagerService.processingTick(new BigDecimal("0.9568"), 101L, false);
+        tickManagerService.processingTick(new BigDecimal("0.9569"), 102L, false);
+        tickManagerService.processingTick(new BigDecimal("0.9577"), 103L, false);
+        tickManagerService.processingTick(new BigDecimal("0.9587"), 104L, false);
+        tickManagerService.processingTick(new BigDecimal("0.9597"), 105L, false);
+        tickManagerService.processingTick(new BigDecimal("0.9567"), 106L, false);
+        tickManagerService.processingTick(new BigDecimal("0.9557"), 107L, true);
     }
 
     @Test

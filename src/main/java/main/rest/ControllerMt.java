@@ -1,5 +1,6 @@
 package main.rest;
 
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import main.service.impl.TickManagerServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,12 @@ public class ControllerMt {
 
   private final TickManagerServiceImpl tickManagerService;
 
-  @PostMapping()
+  @PostMapping()//http://localhost:8080/api/v1/mt?price=0.9935&flag=true
   public ResponseEntity<?> addTick(
-      @RequestParam(name = "price") Double price,
+      @RequestParam(name = "price") BigDecimal price,
       @RequestParam(name = "flag", required = false, defaultValue = "false") Boolean flag) {
+
+    System.out.println(price);
 
       Long time = System.currentTimeMillis();
       try {
