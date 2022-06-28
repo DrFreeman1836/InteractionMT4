@@ -20,28 +20,28 @@ public class TickManagerServiceImpl implements ManagerTicks {
 
   private BigDecimal priceLastTick = new BigDecimal(0);
 
-  public void processingTick(BigDecimal price, Long time, Boolean flag) throws Exception{
+  public void processingTick(BigDecimal price, Long time, Boolean flag) throws Exception {
 
     ticks.add(Tick.builder()
-            .price(price)
-            .timestamp(time)
-            .trend(getTrendTick(price))
-            .flagFrog(flag)
-            .build());
+        .price(price)
+        .timestamp(time)
+        .trend(getTrendTick(price))
+        .flagFrog(flag)
+        .build());
     priceLastTick = price;
 
-    if(ticks.size() > 10){
+    if (ticks.size() > 10) {
       addAllTick(getSortedListTicks());
       ticks.clear();
     }
 
   }
 
-  public List<Tick> getSortedListTicks(){
+  public List<Tick> getSortedListTicks() {
     return ticks.stream().sorted(Comparator.comparingLong(Tick::getTimestamp)).toList();
   }
 
-  public int getTrendTick(BigDecimal price){
+  public int getTrendTick(BigDecimal price) {
     return price.compareTo(priceLastTick) > 0 ? 1 : 0;
   }
 
