@@ -48,7 +48,7 @@ public class ControllerMt {
 
   @GetMapping("/test")
   public ResponseEntity<?> test(){
-    managerChart.getCount();
+    managerChart.getArrayCount();
     return null;
   }
 
