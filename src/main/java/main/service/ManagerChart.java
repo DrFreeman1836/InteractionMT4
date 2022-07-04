@@ -2,8 +2,8 @@ package main.service;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,10 +17,10 @@ public class ManagerChart {
 
     int numberLastPosition = arrayCountTick.size();
 
-    if (arrayCountTick.size() == SIZE_CHART) {
-      arrayCountTick.removeLast();
+    if (numberLastPosition == SIZE_CHART) {
+      arrayCountTick.removeFirst();
     }
-    arrayCountTick.addFirst(count);
+    arrayCountTick.addLast(count);
 
   }
 

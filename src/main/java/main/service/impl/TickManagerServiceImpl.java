@@ -20,6 +20,8 @@ public class TickManagerServiceImpl implements ManagerTicks {
 
   private BigDecimal priceLastTick = new BigDecimal(0);
 
+  private final int SIZE_LIST_TICKS = 200;
+
   public void processingTick(BigDecimal price, Long time, Boolean flag) throws Exception {
 
     ticks.add(Tick.builder()
@@ -30,7 +32,7 @@ public class TickManagerServiceImpl implements ManagerTicks {
         .build());
     priceLastTick = price;
 
-    if (ticks.size() > 10) {
+    if (ticks.size() > SIZE_LIST_TICKS) {
       addAllTick(getSortedListTicks());
       ticks.clear();
     }

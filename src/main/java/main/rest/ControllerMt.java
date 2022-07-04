@@ -19,7 +19,7 @@ public class ControllerMt {
   private final TickManagerServiceImpl tickManagerService;
   private final ManagerChart managerChart;
 
-  @PostMapping()//http://localhost:8080/api/v1/mt?price=0.9935&flag=true
+  @PostMapping()//http://localhost:6868/api/v1/mt?price=0.9935&flag=true
   public ResponseEntity<?> addTick(
       @RequestParam(name = "price") BigDecimal price,
       @RequestParam(name = "flag", required = false, defaultValue = "false") Boolean flag) {
@@ -41,14 +41,8 @@ public class ControllerMt {
   }
 
   @GetMapping()
-  public ResponseEntity<?> createChart(@RequestParam(name = "count") int countTick){
+  public ResponseEntity<?> createChart(@RequestParam(name = "count") int countTick) {
     managerChart.addCount(countTick);
-    return null;
-  }
-
-  @GetMapping("/test")
-  public ResponseEntity<?> test(){
-    managerChart.getArrayCount();
     return null;
   }
 
