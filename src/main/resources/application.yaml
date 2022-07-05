@@ -1,6 +1,6 @@
 
 server:
-  port: 6868
+  port: 80
 
 spring.datasource.url: jdbc:mysql://localhost:3306/ticks
 spring.datasource.username: root

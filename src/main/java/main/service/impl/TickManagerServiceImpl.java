@@ -18,19 +18,16 @@ public class TickManagerServiceImpl implements ManagerTicks {
 
   private List<Tick> ticks = new ArrayList<>();
 
-  private BigDecimal priceLastTick = new BigDecimal(0);
+  private final int SIZE_LIST_TICKS = 3;
 
-  private final int SIZE_LIST_TICKS = 200;
-
-  public void processingTick(BigDecimal price, Long time, Boolean flag) throws Exception {
+  public void processingTick(BigDecimal priceAsk, BigDecimal priceBid, Long time, Boolean flag) throws Exception {
 
     ticks.add(Tick.builder()
-        .price(price)
+        .priceAsk(priceAsk)
+        .priceBid(priceBid)
         .timestamp(time)
-        .trend(getTrendTick(price))
         .flagFrog(flag)
         .build());
-    priceLastTick = price;
 
     if (ticks.size() > SIZE_LIST_TICKS) {
       addAllTick(getSortedListTicks());
@@ -43,8 +40,8 @@ public class TickManagerServiceImpl implements ManagerTicks {
     return ticks.stream().sorted(Comparator.comparingLong(Tick::getTimestamp)).toList();
   }
 
-  public int getTrendTick(BigDecimal price) {
-    return price.compareTo(priceLastTick) > 0 ? 1 : 0;
+  public BigDecimal getSizeTick(BigDecimal priceAsk, BigDecimal priceBid) {
+    return priceAsk.subtract(priceBid);
   }
 
   @Override

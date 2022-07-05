@@ -1,5 +1,6 @@
 package main.model;
 
+import com.mysql.cj.protocol.ColumnDefinition;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,22 +30,22 @@ public class Tick {
   private int id;
 
   /**
-   * цена тика
+   * цена Ask
    */
-  @Column(columnDefinition = "decimal(5,5)", name = "PRICE")
-  private BigDecimal price;
+  @Column(columnDefinition = "decimal(7,5)", name = "PRICE_ASK")
+  private BigDecimal priceAsk;
+
+  /**
+   * цена Bid
+   */
+  @Column(columnDefinition = "decimal(7,5)", name = "PRICE_BID")
+  private BigDecimal priceBid;
 
   /**
    * время тика в мс
    */
   @Column(name = "TIMESTAMP")
   private long timestamp;
-
-  /**
-   * направление тика относительно предыдущего 1 - в лонг / 0 - в шорт
-   */
-  @Column(name = "TREND")
-  private int trend;
 
   /**
    * флаг порога жабы

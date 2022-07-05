@@ -19,18 +19,17 @@ public class ControllerMt {
   private final TickManagerServiceImpl tickManagerService;
   private final ManagerChart managerChart;
 
-  @PostMapping()//http://localhost:6868/api/v1/mt?price=0.9935&flag=true
+  @PostMapping()
   public ResponseEntity<?> addTick(
-      @RequestParam(name = "price") BigDecimal price,
+      @RequestParam(name = "priceAsk") BigDecimal priceAsk,
+      @RequestParam(name = "priceBid") BigDecimal priceBid,
       @RequestParam(name = "flag", required = false, defaultValue = "false") Boolean flag) {
-
-    System.out.println(price);
 
     Long time = System.currentTimeMillis();
 
     try {
 
-      tickManagerService.processingTick(price, time, flag);
+      tickManagerService.processingTick(priceAsk, priceBid, time, flag);
       return ResponseEntity.ok().build();
 
     } catch (Exception ex) {
