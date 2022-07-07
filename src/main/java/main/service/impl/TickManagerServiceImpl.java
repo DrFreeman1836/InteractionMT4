@@ -44,6 +44,10 @@ public class TickManagerServiceImpl implements ManagerTicks {
     return priceAsk.subtract(priceBid);
   }
 
+  public long countTicks(){
+    return tickRepository.count();
+  }
+
   @Override
   public int addTick(Tick tick) {
     return tickRepository.save(tick).getId();
