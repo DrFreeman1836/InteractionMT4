@@ -67,4 +67,9 @@ public class ControllerMt {
 
   }
 
+  @GetMapping("/count")
+  public ResponseEntity<?> getCountTicks(){
+    return ResponseEntity.ok().body(tickManagerService.countTicks());
+  }
+
 }
