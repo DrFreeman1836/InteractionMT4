@@ -1,37 +1,41 @@
 package main.service;
 
-import java.util.Deque;
-import java.util.LinkedList;
-
-import java.util.List;
+import java.io.IOException;
+import main.repository.TickRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ManagerChart {
 
-  private Deque<Integer> arrayCountTick = new LinkedList<>();
+  private final BuilderChart chart;
 
-  private final int SIZE_CHART = 3;
+  private int lastId = 1;
 
-  public void addCount(int count) {
+  private final TickRepository tickRepository;
 
-    int numberLastPosition = arrayCountTick.size();
+  @Autowired
+  public ManagerChart(BuilderChart chart, TickRepository tickRepository) {
+    this.chart = chart;
+    this.tickRepository = tickRepository;
+  }
 
-    if (numberLastPosition == SIZE_CHART) {
-      arrayCountTick.removeFirst();
-    }
-    arrayCountTick.addLast(count);
+  public void getSelection(String from, String to) {
+
+    //
 
   }
 
-  public List<Integer> getArrayCount() {
-    System.out.println("=====================");
+  public void allSelection(){
 
-    arrayCountTick.forEach(System.out::println);
-
-    return (List<Integer>) arrayCountTick;
+    lastId = tickRepository.getIdNextFlag(lastId);
+    System.out.println(lastId);
 
   }
 
+  public void savePicture() throws IOException {
+    chart.saveChart();
+  }
 
 }
+

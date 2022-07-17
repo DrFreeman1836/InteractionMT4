@@ -1,5 +1,6 @@
 package main.rest;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import main.service.ManagerChart;
@@ -40,9 +41,30 @@ public class ControllerMt {
   }
 
   @GetMapping()
-  public ResponseEntity<?> createChart(@RequestParam(name = "count") int countTick) {
-    managerChart.addCount(countTick);
-    return null;
+  public ResponseEntity<?> createChart(
+      @RequestParam(name = "from", required = false) String from,
+      @RequestParam(name = "to", required = false) String to) {
+
+    if (from == null && to == null) {
+      managerChart.allSelection();
+      return ResponseEntity.ok().build();
+    }
+    if (from != null && to != null) {
+      managerChart.getSelection(from, to);
+      return ResponseEntity.ok().build();
+    }
+      return ResponseEntity.status(500).body("Неверные параметры");
+  }
+
+  @GetMapping("/save")
+  public ResponseEntity<?> saveChart() {
+    try {
+      managerChart.savePicture();
+      return ResponseEntity.ok().build();
+    } catch (IOException e) {
+      return ResponseEntity.status(500).body("Неверный путь или выборка не сформирована");
+    }
+
   }
 
 }
