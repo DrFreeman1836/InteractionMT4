@@ -1,6 +1,14 @@
 package main.service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import main.model.Tick;
 import main.repository.TickRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,29 +20,45 @@ public class ManagerChart {
 
   private int lastId = 1;
 
-  private int count = 4;
+  private final int count = 18;
 
   private final TickRepository tickRepository;
 
+  private final BuilderChart builderChart;
+
+  private final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+
+  private final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+
   @Autowired
-  public ManagerChart(BuilderChart chart, TickRepository tickRepository) {
+  public ManagerChart(BuilderChart chart, TickRepository tickRepository,
+      BuilderChart builderChart) {
     this.chart = chart;
     this.tickRepository = tickRepository;
+    this.builderChart = builderChart;
   }
 
-  public void getSelection(String from, String to) {
+  public void getSelectionOnTime(String from, String to) throws ParseException {//14.07.2022 16:53:25
 
-    //
+    List<Tick> data = tickRepository.getTicksFromToTime(getMsOnTime(from), getMsOnTime(to));
+    List<Integer> xData = getXDate(data);
+    List<BigDecimal> askData = data.stream().map(Tick::getPriceAsk).toList();
+    List<BigDecimal> bidData = data.stream().map(Tick::getPriceBid).toList();
+    builderChart.setNameChart(getNameChart(data));
+    builderChart.buildGraph(xData, askData, bidData);
 
   }
 
-  public void allSelection(){
+  public void getAllSelection() {
 
-    lastId = tickRepository.getIdNextFlag(lastId).isEmpty()
-    ? lastId : tickRepository.getIdNextFlag(lastId).get();
-    System.out.println(lastId);
-
-    tickRepository.getLastPointFrog(lastId, count).forEach(System.out::println);//если норм, далее выводить в графику и сохранение
+    lastId = tickRepository.getNextFlag(lastId).isEmpty() ? lastId
+        : tickRepository.getNextFlag(lastId).get();
+    List<Tick> data = tickRepository.getLastPointFrog(lastId, count);
+    List<Integer> xData = data.stream().map(Tick::getId).toList();
+    List<BigDecimal> askData = data.stream().map(Tick::getPriceAsk).toList();
+    List<BigDecimal> bidData = data.stream().map(Tick::getPriceBid).toList();
+    builderChart.setNameChart(getNameChart(data));
+    builderChart.buildGraph(xData, askData, bidData);
 
   }
 
@@ -42,5 +66,41 @@ public class ManagerChart {
     chart.saveChart();
   }
 
+  public void setLastId() {
+    lastId = 1;
+  }
+
+  private List<Integer> getXDate(List<Tick> list){
+    List<Integer> listXData = new ArrayList<>();
+    for(int i = 0; i < list.size(); i++){
+      listXData.add(i);
+    }
+    return listXData;
+  }
+
+  private String getNameChart(List<Tick> list) {
+    try {
+      Long start = list.get(0).getTimestamp();
+      Long finish = list.get(list.size() - 1).getTimestamp();
+      return getTimeOnMs(start) + " - " + getTimeOnMs(finish);
+    } catch (RuntimeException e) {
+      return "График=)";
+    }
+  }
+
+  private Long getMsOnTime(String time) throws ParseException {
+    return FORMAT.parse(time).getTime();
+  }
+
+  private String getTimeOnMs(Long ms) {
+    Date date = new Date(ms);
+    return FORMATTER.format(date);
+  }
+
 }
+/**
+ * пометки и отмеченные баги
+ * конфигурационный файл за пределы сборки
+ * клиентская веб часть
+ */
 

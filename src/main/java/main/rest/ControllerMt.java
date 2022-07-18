@@ -2,6 +2,7 @@ package main.rest;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import lombok.RequiredArgsConstructor;
 import main.service.ManagerChart;
 import main.service.impl.TickManagerServiceImpl;
@@ -46,14 +47,24 @@ public class ControllerMt {
       @RequestParam(name = "to", required = false) String to) {
 
     if (from == null && to == null) {
-      managerChart.allSelection();
+      managerChart.getAllSelection();
       return ResponseEntity.ok().build();
     }
     if (from != null && to != null) {
-      managerChart.getSelection(from, to);
-      return ResponseEntity.ok().build();
+      try {
+        managerChart.getSelectionOnTime(from, to);
+        return ResponseEntity.ok().build();
+      } catch (ParseException e) {
+        return ResponseEntity.status(500).body("Невалидный формат даты");
+      }
     }
-      return ResponseEntity.status(500).body("Неверные параметры");
+    return ResponseEntity.status(500).body("Неверные параметры");
+  }
+
+  @PostMapping("/first")
+  public ResponseEntity<?> atFirst() {
+    managerChart.setLastId();
+    return ResponseEntity.ok().build();
   }
 
   @GetMapping("/save")
