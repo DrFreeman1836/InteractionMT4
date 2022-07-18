@@ -12,7 +12,7 @@ public class ManagerChart {
 
   private int lastId = 1;
 
-  private int count = 18;
+  private int count = 4;
 
   private final TickRepository tickRepository;
 
@@ -30,10 +30,11 @@ public class ManagerChart {
 
   public void allSelection(){
 
-    lastId = tickRepository.getIdNextFlag(lastId);
-    System.out.println(lastId);//проверить что будет когда уже вернул максимальный
+    lastId = tickRepository.getIdNextFlag(lastId).isEmpty()
+    ? lastId : tickRepository.getIdNextFlag(lastId).get();
+    System.out.println(lastId);
 
-    //tickRepository.getLastPointFrog(lastId, count);
+    tickRepository.getLastPointFrog(lastId, count).forEach(System.out::println);
 
   }
 

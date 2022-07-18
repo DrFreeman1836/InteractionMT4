@@ -53,4 +53,14 @@ public class Tick {
   @Column(name = "FLAG_FROG")
   private boolean flagFrog;
 
+  @Override
+  public String toString() {
+    return "Tick{" +
+        "id=" + id +
+        ", priceAsk=" + priceAsk +
+        ", priceBid=" + priceBid +
+        ", timestamp=" + timestamp +
+        ", flagFrog=" + flagFrog +
+        '}';
+  }
 }
