@@ -34,7 +34,7 @@ public class ManagerChart {
     ? lastId : tickRepository.getIdNextFlag(lastId).get();
     System.out.println(lastId);
 
-    tickRepository.getLastPointFrog(lastId, count).forEach(System.out::println);
+    tickRepository.getLastPointFrog(lastId, count).forEach(System.out::println);//если норм, далее выводить в графику и сохранение
 
   }
 
