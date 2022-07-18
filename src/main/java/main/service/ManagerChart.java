@@ -12,6 +12,8 @@ public class ManagerChart {
 
   private int lastId = 1;
 
+  private int count = 18;
+
   private final TickRepository tickRepository;
 
   @Autowired
@@ -29,7 +31,9 @@ public class ManagerChart {
   public void allSelection(){
 
     lastId = tickRepository.getIdNextFlag(lastId);
-    System.out.println(lastId);
+    System.out.println(lastId);//проверить что будет когда уже вернул максимальный
+
+    //tickRepository.getLastPointFrog(lastId, count);
 
   }
 

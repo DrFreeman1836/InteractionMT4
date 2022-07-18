@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import main.model.Tick;
 import main.repository.TickRepository;
@@ -18,7 +20,7 @@ public class TickManagerServiceImpl implements ManagerTicks {
 
   private List<Tick> ticks = new ArrayList<>();
 
-  private final int SIZE_LIST_TICKS = 3;
+  private final int SIZE_LIST_TICKS = 300;
 
   public void processingTick(BigDecimal priceAsk, BigDecimal priceBid, Long time, Boolean flag) throws Exception {
 
@@ -37,7 +39,7 @@ public class TickManagerServiceImpl implements ManagerTicks {
   }
 
   public List<Tick> getSortedListTicks() {
-    return ticks.stream().sorted(Comparator.comparingLong(Tick::getTimestamp)).toList();
+    return ticks.stream().sorted(Comparator.comparingLong(Tick::getTimestamp)).collect(Collectors.toList());
   }
 
   public BigDecimal getSizeTick(BigDecimal priceAsk, BigDecimal priceBid) {

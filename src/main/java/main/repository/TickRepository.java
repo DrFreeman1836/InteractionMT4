@@ -18,7 +18,13 @@ public interface TickRepository extends JpaRepository<Tick, Integer> {
   int getIdNextFlag(@Param("lastId") Integer lastId);
 
   @Transactional
-  @Query(value = "", nativeQuery = true)
-  List<Tick> getLastPointFrog(@Param("lastId") Integer lastId);
+  @Query(value = "SELECT * " +
+          "FROM tick " +
+          "WHERE id > :lastId AND flag_frog = 1", nativeQuery = true)
+  List<Tick> getLastPointFrog(@Param("lastId") Integer lastId, @Param("count") Integer count);//проверить запросами к БД иначе решать вопрос двумя запросами
 
 }
+
+
+//  @Query("SELECT u FROM User u WHERE u.status = 1")
+//  Collection<User> findAllActiveUsers();
