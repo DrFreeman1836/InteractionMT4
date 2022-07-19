@@ -61,6 +61,19 @@ public class ControllerMt {
     return ResponseEntity.status(500).body("Неверные параметры");
   }
 
+  @GetMapping("/history")
+  public ResponseEntity<?> historyTick(
+      @RequestParam(name = "id") Integer id,
+      @RequestParam(name = "tolerance") Integer tolerance) {
+    try {
+      managerChart.getSelectionOnTick(id, tolerance);
+      return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(e.toString());
+    }
+
+  }
+
   @PostMapping("/first")
   public ResponseEntity<?> atFirst() {
     managerChart.setLastId();

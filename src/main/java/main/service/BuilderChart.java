@@ -22,7 +22,7 @@ public class BuilderChart {
   @Value("${pathOfSave}")
   private String pathOfSave;
 
-  public BuilderChart(){
+  public BuilderChart() {
     chart.setXAxisTitle("ticks");
     chart.setYAxisTitle("price");
     chart.getStyler().setCursorEnabled(true);
@@ -30,7 +30,7 @@ public class BuilderChart {
   }
 
   public void buildGraph(List<Integer> xData, List<BigDecimal> askData, List<BigDecimal> bidData) {
-    if(chart.getSeriesMap().containsKey("Ask")){
+    if (chart.getSeriesMap().containsKey("Ask")) {
       chart.updateXYSeries("Ask", xData, askData, null);
       chart.updateXYSeries("Bid", xData, bidData, null);
     } else {
@@ -47,7 +47,7 @@ public class BuilderChart {
   }
 
   public void saveChart() throws IOException {
-    if(chart.getTitle() == null){
+    if (chart.getTitle() == null) {
       throw new IOException();
     }
     String path = pathOfSave + chart.getTitle().replaceAll(":", ".");

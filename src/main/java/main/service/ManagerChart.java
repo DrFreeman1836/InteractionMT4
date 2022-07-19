@@ -36,10 +36,19 @@ public class ManagerChart {
     this.builderChart = builderChart;
   }
 
-  public void getSelectionOnTime(String from, String to) throws ParseException {//14.07.2022 16:53:25
+  public void getSelectionOnTick(Integer id, Integer tolerance) {
+    List<Tick> data = tickRepository.getHistoryTick(id, tolerance);
+    List<Integer> xData = data.stream().map(Tick::getId).collect(Collectors.toList());
+    List<BigDecimal> askData = data.stream().map(Tick::getPriceAsk).collect(Collectors.toList());
+    List<BigDecimal> bidData = data.stream().map(Tick::getPriceBid).collect(Collectors.toList());
+    builderChart.setNameChart(getNameChart(data));
+    builderChart.buildGraph(xData, askData, bidData);
+  }
+
+  public void getSelectionOnTime(String from, String to) throws ParseException {
 
     List<Tick> data = tickRepository.getTicksFromToTime(getMsOnTime(from), getMsOnTime(to));
-    List<Integer> xData = getXDate(data);
+    List<Integer> xData = data.stream().map(Tick::getId).collect(Collectors.toList());
     List<BigDecimal> askData = data.stream().map(Tick::getPriceAsk).collect(Collectors.toList());
     List<BigDecimal> bidData = data.stream().map(Tick::getPriceBid).collect(Collectors.toList());
     builderChart.setNameChart(getNameChart(data));
@@ -68,9 +77,9 @@ public class ManagerChart {
     lastId = 1;
   }
 
-  private List<Integer> getXDate(List<Tick> list){
+  private List<Integer> getXDate(List<Tick> list) {
     List<Integer> listXData = new ArrayList<>();
-    for(int i = 0; i < list.size(); i++){
+    for (int i = 0; i < list.size(); i++) {
       listXData.add(i);
     }
     return listXData;

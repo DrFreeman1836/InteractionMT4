@@ -30,4 +30,10 @@ public interface TickRepository extends JpaRepository<Tick, Integer> {
       + "WHERE timestamp >= :from AND timestamp <= :to", nativeQuery = true)
   List<Tick> getTicksFromToTime(@Param("from") Long from, @Param("to") Long to);
 
+  @Transactional
+  @Query(value = "SELECT * "
+      + "FROM tick "
+      + "WHERE id >= :idTick - :tolerance AND id <= :idTick + :tolerance", nativeQuery = true)
+  List<Tick> getHistoryTick(@Param("idTick") Integer idTick, @Param("tolerance") Integer tolerance);
+
 }
