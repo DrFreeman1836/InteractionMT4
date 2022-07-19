@@ -18,36 +18,41 @@ public class BuilderChart {
   private String nameChart;
 
   private XYChart chart = new XYChart(1000, 500);
+  //private XYChart chart2 = new QuickChart();
+  //private
 
   //SwingWrapper<XYChart> wrapper;
 
   @Value("${pathOfSave}")
   private String pathOfSave;
 
-//  public BuilderChart(){
-//    wrapper = new SwingWrapper<XYChart>(chart);
-//  }
+  public BuilderChart(){
+    chart.setXAxisTitle("ticks");
+    chart.setYAxisTitle("price");
+    //wrapper = new SwingWrapper<XYChart>(chart);
+  }
 
   public void buildGraph(List<Integer> xData, List<BigDecimal> askData, List<BigDecimal> bidData) {
-    chart = QuickChart.getChart(nameChart, "ticks", "price", "Ask", xData, askData);
-    chart.getSeriesMap().get("Ask").setLineColor(Color.red);
+    chart.addSeries("Ask", xData, askData).setLineColor(Color.RED);
     chart.addSeries("Bid", xData, bidData).setLineColor(Color.BLUE);
     chart.getStyler().setCursorEnabled(true);
 
     new SwingWrapper(chart).displayChart();//пофиксить баг с бесконечными окнами
+    //wrapper.
     //wrapper.displayChart();
 
   }
 
   public void setNameChart(String nameChart) {
-    this.nameChart = nameChart;
+    chart.setTitle(nameChart);
   }
 
   public void saveChart() throws IOException {
     if(nameChart == null){
       throw new IOException();
     }
-    BitmapEncoder.saveBitmapWithDPI(chart, pathOfSave, BitmapFormat.PNG, 300);//доделать на винде сохранение с разным именем в указанную папку
+    String path = pathOfSave + nameChart.replaceAll(":", ".");
+    BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapFormat.PNG, 600);
   }
 
 }

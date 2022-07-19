@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import main.model.Tick;
 import main.repository.TickRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ManagerChart {
-
-  private final BuilderChart chart;
 
   private int lastId = 1;
 
@@ -31,9 +31,7 @@ public class ManagerChart {
   private final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
   @Autowired
-  public ManagerChart(BuilderChart chart, TickRepository tickRepository,
-      BuilderChart builderChart) {
-    this.chart = chart;
+  public ManagerChart(TickRepository tickRepository, BuilderChart builderChart) {
     this.tickRepository = tickRepository;
     this.builderChart = builderChart;
   }
@@ -42,8 +40,8 @@ public class ManagerChart {
 
     List<Tick> data = tickRepository.getTicksFromToTime(getMsOnTime(from), getMsOnTime(to));
     List<Integer> xData = getXDate(data);
-    List<BigDecimal> askData = data.stream().map(Tick::getPriceAsk).toList();
-    List<BigDecimal> bidData = data.stream().map(Tick::getPriceBid).toList();
+    List<BigDecimal> askData = data.stream().map(Tick::getPriceAsk).collect(Collectors.toList());
+    List<BigDecimal> bidData = data.stream().map(Tick::getPriceBid).collect(Collectors.toList());
     builderChart.setNameChart(getNameChart(data));
     builderChart.buildGraph(xData, askData, bidData);
 
@@ -54,16 +52,16 @@ public class ManagerChart {
     lastId = tickRepository.getNextFlag(lastId).isEmpty() ? lastId
         : tickRepository.getNextFlag(lastId).get();
     List<Tick> data = tickRepository.getLastPointFrog(lastId, count);
-    List<Integer> xData = data.stream().map(Tick::getId).toList();
-    List<BigDecimal> askData = data.stream().map(Tick::getPriceAsk).toList();
-    List<BigDecimal> bidData = data.stream().map(Tick::getPriceBid).toList();
+    List<Integer> xData = data.stream().map(Tick::getId).collect(Collectors.toList());
+    List<BigDecimal> askData = data.stream().map(Tick::getPriceAsk).collect(Collectors.toList());
+    List<BigDecimal> bidData = data.stream().map(Tick::getPriceBid).collect(Collectors.toList());
     builderChart.setNameChart(getNameChart(data));
     builderChart.buildGraph(xData, askData, bidData);
 
   }
 
   public void savePicture() throws IOException {
-    chart.saveChart();
+    builderChart.saveChart();
   }
 
   public void setLastId() {
@@ -84,7 +82,7 @@ public class ManagerChart {
       Long finish = list.get(list.size() - 1).getTimestamp();
       return getTimeOnMs(start) + " - " + getTimeOnMs(finish);
     } catch (RuntimeException e) {
-      return "График=)";
+      return "Н.Э.";
     }
   }
 
@@ -98,9 +96,4 @@ public class ManagerChart {
   }
 
 }
-/**
- * пометки и отмеченные баги
- * конфигурационный файл за пределы сборки
- * клиентская веб часть
- */
 
