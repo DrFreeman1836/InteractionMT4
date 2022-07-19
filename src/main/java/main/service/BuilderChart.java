@@ -15,13 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class BuilderChart {
 
-  private String nameChart;
-
   private XYChart chart = new XYChart(1000, 500);
-  //private XYChart chart2 = new QuickChart();
-  //private
 
-  //SwingWrapper<XYChart> wrapper;
+  SwingWrapper<XYChart> wrapper;
 
   @Value("${pathOfSave}")
   private String pathOfSave;
@@ -29,17 +25,20 @@ public class BuilderChart {
   public BuilderChart(){
     chart.setXAxisTitle("ticks");
     chart.setYAxisTitle("price");
-    //wrapper = new SwingWrapper<XYChart>(chart);
+    chart.getStyler().setCursorEnabled(true);
+    wrapper = new SwingWrapper<XYChart>(chart);
   }
 
   public void buildGraph(List<Integer> xData, List<BigDecimal> askData, List<BigDecimal> bidData) {
-    chart.addSeries("Ask", xData, askData).setLineColor(Color.RED);
-    chart.addSeries("Bid", xData, bidData).setLineColor(Color.BLUE);
-    chart.getStyler().setCursorEnabled(true);
+    if(chart.getSeriesMap().containsKey("Ask")){
+      chart.updateXYSeries("Ask", xData, askData, null);
+      chart.updateXYSeries("Bid", xData, bidData, null);
+    } else {
+      chart.addSeries("Ask", xData, askData).setLineColor(Color.RED);
+      chart.addSeries("Bid", xData, bidData).setLineColor(Color.BLUE);
+    }
 
-    new SwingWrapper(chart).displayChart();//пофиксить баг с бесконечными окнами
-    //wrapper.
-    //wrapper.displayChart();
+    wrapper.displayChart();
 
   }
 
@@ -48,10 +47,11 @@ public class BuilderChart {
   }
 
   public void saveChart() throws IOException {
-    if(nameChart == null){
+    if(chart.getTitle() == null){
       throw new IOException();
     }
-    String path = pathOfSave + nameChart.replaceAll(":", ".");
+    String path = pathOfSave + chart.getTitle().replaceAll(":", ".");
+    System.out.println(path);//
     BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapFormat.PNG, 600);
   }
 
