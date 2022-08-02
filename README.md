@@ -4,7 +4,7 @@
 Приложение для записи и графического анализа тиков из торгового терминала Meta Trader.
 Основной стек: Spring Boot, SwingWrapper, MySQL.  
 Сборка: mvn package  
-Базовый URL: http://localhost:6363/api/v1/mt  
+Базовый URL: http://localhost:80/api/v1/mt  
   
 Спецификация:  
 POST /  
